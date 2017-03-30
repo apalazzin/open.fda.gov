@@ -5,6 +5,7 @@ import xhrGET from '../utils/xhr'
 
 type tSTATE = {
   data: ?Array<Object>;
+  noun: string;
   api_query: ?Array<Object>;
 };
 
@@ -14,7 +15,10 @@ const DataExplorerContainer = function (ComposedDataExplorer: ReactClass): React
   class HOC extends React.Component {
     state: tSTATE = {
       data: null,
-      api_query: null
+      noun: null,
+      api_query: null,
+      showMobileNav: false,
+      showResult: false
     };
 
     componentDidMount () {
@@ -25,6 +29,7 @@ const DataExplorerContainer = function (ComposedDataExplorer: ReactClass): React
       const _handleResponse = data => {
         this.setState({
           data,
+          showResult: true,
         })
       }
 
@@ -32,21 +37,10 @@ const DataExplorerContainer = function (ComposedDataExplorer: ReactClass): React
     }
 
     render (): ?React.Element {
-      if (!this.state.data) {
-        return (
-          <section
-            className='flex-box font-size-2 just-center align-center'
-            style={{
-              minHeight: '50vh',
-            }}>
-            Loading..
-          </section>
-        )
-      }
-
       return (
         <ComposedDataExplorer
           data={this.state.data}
+          noun={this.state.data}
         />
       )
     }

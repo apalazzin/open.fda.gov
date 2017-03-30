@@ -8,79 +8,95 @@ import Hero from './Hero'
 import Layout from './Layout'
 import DataExplorerContainer from '../containers/DataExplorerContainer'
 
-const DataExplorer = (props: tPROPS) => (
-  <Layout
-    crumbs={['Data Explorer']}
-    title='openFDA › Data Explorer'>
-    <Hero
-      label='Explore'
-      title='Data Explorer'
-      description='Explore all openFDA data and visualize the results.'
-    />
-    <section className='container clearfix marg-t-3 marg-b-3 relative'>
-      <ul className='flex-box dir-row flex-wrap'>
-        {
-          props.data.map((end: Object, i) => {
-            const { endpoint, status, } = end
 
-            const catCx = cx({
-              'weight-600 marg-b-1': true,
-              'clr-secondary': status !== 'GREEN',
-              'clr-green': status === 'GREEN',
-            })
+type tPROPS = {
+  data: object;
+  noun: string;
+  api_query: string;
+  toggleDropdownContent: Function;
+  hideDropdownContent: Function;
+  showDropdownContent: Function;
+  activeDropdown: string;
+};
 
-            const liStyl: Object = Object.freeze({
-              borderTop: status === 'GREEN' ?
-                '5px solid #2e8540' :
-                '5px solid #e31c3d'
-            })
+const nounLinkMap: Array = [
+  'device',
+  'drug',
+  'food'
+];
 
-            const pStyl: Object = Object.freeze({
-              background: status === 'GREEN' ? '#2e8540' : '#e31c3d',
-            })
+const endpointLinkMap: Object = Object.freeze({
+  'device': [
+    'class',
+    'clearance',
+    'enforcement',
+    'event',
+    'pma',
+    'recall',
+    'reglist',
+    'udi'
+  ],
+  'drug': [
+    'enforcement',
+    'event',
+    'label'
+  ],
+  'food': [
+    'event',
+    'enforcement'
+  ]
+});
 
-            return (
-              <li
-                key={i}
-                style={liStyl}
-                className='col marg-b-2 pad-2 t-3 d-2 b-1 grow-none'>
-                <p className={catCx}>{catMap[endpoint]}</p>
-                <p className='small'>api.fda.gov/{endpointLinkMap[endpoint]}</p>
-                <ul className='flex-box'>
-                  <li className='clr-base marg-r-2 small'>
-                    Status
-                    <p
-                      style={pStyl}
-                      className='clr-white marg-t-2 pad-1 txt-c weight-600'>
-                      {
-                        status === 'GREEN' ?
-                          'OK'
-                          :
-                          'OFFLINE'
-                      }
-                    </p>
-                  </li>
-                  <li className='clr-base marg-r-2 small'>
-                    Last Updated
-                    <p className='small'>
-                      {end.last_updated}
-                    </p>
-                  </li>
-                  <li className='clr-base marg-r-2 small'>
-                    Total records
-                    <p className='small'>
-                      {end.documents}
-                    </p>
-                  </li>
-                </ul>
-              </li>
-            )
-          })
-        }
-      </ul>
-    </section>
-  </Layout>
-)
+const DataExplorer = (props: tPROPS) => {
+  const {
+    data,
+    noun,
+    api_query,
+    hideDropdownContent,
+    showDropdownContent,
+    toggleDropdownContent,
+    activeDropdown
+  } = props
+
+  return (
+    <ul className='flex-box dir-row flex-wrap'>
+      <form onSubmit={props.onSubmit}>
+        <div className='select-wrap'>
+          <select className='select clr-primary'>
+            {
+              Object.keys(endpointLinkMap[noun]).map((end, i) => {
+                const endpoint = endpointLinkMap[end]
+
+                return (
+                  <option
+                    key={i}
+                    className='marg-t-1 pad-t-1 pad-l-2 pad-r-2 b-b-1 qe-li reverse-pre relative'
+                    tabIndex={0}>{endpoint}
+                  </option>
+                )
+              })
+            }
+          </select>
+        </div>
+        <label>
+          <span>Explorer Form</span>
+          <input
+            className='marg-b-2 font-size-5 pad-1 row'
+            id='explorer-form'
+            defaultValue=''
+            type='text'
+            placeholder='Enter your email address'
+          />
+        </label>
+        <button
+          className='block marg-b-2 bg-primary clr-white weight-700'
+          onClick={props.onSubmit}>
+          Search
+        </button>
+      </form>
+    </ul>
+  )
+}
 
 DataExplorer.displayName = 'component/DataExplorer'
 export default DataExplorerContainer(DataExplorer)

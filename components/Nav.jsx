@@ -174,6 +174,7 @@ const Nav = (props: tPROPS) => {
                     <Link className={linkCx} to='/api/status/'>API status</Link>
                     <Link className={linkCx} to='/api/statistics/'>API usage statistics</Link>
                     <Link className={linkCx} to='/downloads/'>Downloads</Link>
+                    <Link className={linkCx} to='/data/explorer/'>Data Explorer</Link>
                   </div>
                 </div>
               </div>
