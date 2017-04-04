@@ -47,6 +47,7 @@
     "react-highlight": "0.8.0",
     "react-radio-group": "2.2.0",
     "react-router": "2.0.0",
+    "react-select": "^1.0.0-rc.3",
     "webfontloader": "1.6.24",
     "webpack": "1.12.14"
   },
@@ -72,6 +73,7 @@
     "gulp-stylus": "~2.3.1",
     "gulp-uncss": "~1.0.5",
     "nib": "~1.1.0",
+    "react-select": "1.0.0-rc.3",
     "react-transform-catch-errors": "~1.0.2",
     "react-transform-hmr": "~1.0.3",
     "redbox-react": "~1.2.2"

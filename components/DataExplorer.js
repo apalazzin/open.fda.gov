@@ -4,90 +4,76 @@
 import React from 'react'
 import cx from 'classnames'
 
-import Hero from './Hero'
-import Layout from './Layout'
 import DataExplorerContainer from '../containers/DataExplorerContainer'
+import Select from 'react-select';
 
+import 'react-select/dist/react-select.css';
+import QueryEngine from '../components/QueryEngine'
+import QueryEngineContainer from '../containers/QueryEngineContainer'
 
 type tPROPS = {
   data: object;
   noun: string;
+  endpoint: string;
+  fields: string;
   api_query: string;
-  toggleDropdownContent: Function;
-  hideDropdownContent: Function;
-  showDropdownContent: Function;
-  activeDropdown: string;
+  noun_change: Function;
+  endpoint_change: Function;
+  populate_fields: Function;
 };
 
-const nounLinkMap: Array = [
-  'device',
-  'drug',
-  'food'
+const noun_list: Array = [
+  {value: 'device', label: 'Device'},
+  {value: 'drug', label: 'Drug'},
+  {value: 'food', label: 'Food'}
 ];
 
-const endpointLinkMap: Object = Object.freeze({
+const endpoint_list: Object = Object.freeze({
   'device': [
-    'class',
-    'clearance',
-    'enforcement',
-    'event',
-    'pma',
-    'recall',
-    'reglist',
-    'udi'
+    {value: 'class', label: 'Class'},
+    {value: 'clearance', label: 'Clearance'},
+    {value: 'enforcement', label: 'Enforcement'},
+    {value: 'event', label: 'Event'},
+    {value: 'pma', label: 'PMA'},
+    {value: 'recall', label: 'Recall'},
+    {value: 'reglist', label: 'Reglist'},
+    {value: 'udi', label: 'UDI'},
   ],
   'drug': [
-    'enforcement',
-    'event',
-    'label'
+    {value: 'enforcement', label: 'Enforcement'},
+    {value: 'event', label: 'Event'},
+    {value: 'label', label: 'Label'},
   ],
   'food': [
-    'event',
-    'enforcement'
+    {value: 'event', label: 'Event'},
+    {value: 'enforcement', label: 'Enforcement'}
   ]
 });
+
+const ComposedQueryEngine: ReactClass = QueryEngineContainer(QueryEngine)
 
 const DataExplorer = (props: tPROPS) => {
   const {
     data,
     noun,
+    endpoint,
+    fields,
     api_query,
-    hideDropdownContent,
-    showDropdownContent,
-    toggleDropdownContent,
-    activeDropdown
+    noun_change,
+    endpoint_change,
+    populate_fields
   } = props
 
   return (
+    <div>
     <ul className='flex-box dir-row flex-wrap'>
       <form onSubmit={props.onSubmit}>
-        <div className='select-wrap'>
-          <select className='select clr-primary'>
-            {
-              Object.keys(endpointLinkMap[noun]).map((end, i) => {
-                const endpoint = endpointLinkMap[end]
-
-                return (
-                  <option
-                    key={i}
-                    className='marg-t-1 pad-t-1 pad-l-2 pad-r-2 b-b-1 qe-li reverse-pre relative'
-                    tabIndex={0}>{endpoint}
-                  </option>
-                )
-              })
-            }
-          </select>
-        </div>
-        <label>
-          <span>Explorer Form</span>
-          <input
-            className='marg-b-2 font-size-5 pad-1 row'
-            id='explorer-form'
-            defaultValue=''
-            type='text'
-            placeholder='Enter your email address'
-          />
-        </label>
+        <label>Noun</label>
+        <Select name='noun_select' options={noun_list} onChange={noun_change} value={noun}/>
+        <label>Endpoint</label>
+        <Select name='endpoint_select' options={endpoint_list[noun]} onChange={endpoint_change} value={endpoint}/>
+        <label>Fields</label>
+        <Select name='fields_select' options={fields} />
         <button
           className='block marg-b-2 bg-primary clr-white weight-700'
           onClick={props.onSubmit}>
@@ -95,6 +81,10 @@ const DataExplorer = (props: tPROPS) => {
         </button>
       </form>
     </ul>
+    <div>
+      <ComposedQueryEngine/>
+    </div>
+    </div>
   )
 }
 
